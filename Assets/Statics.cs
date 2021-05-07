@@ -8,6 +8,7 @@ public static class Statics
     public static void PrintHelp() 
     {
         Debug.Log($"{Application.productName} v{Application.version}. \r\nUsage:\r\n" +
+        " -batchmode      Unity argument to run without a window (headless)\r\n" +
         " -url            URL to download\r\n" +
         " -id             ID of the file\r\n" +
         " -ver            file version\r\n" +
