@@ -8,6 +8,7 @@ By default the cache path is in ``AppData\LocalLow\UnityTools\AssetBundleCacher\
 
 Usage:
 ```
+ -batchmode      Unity argument to run without a window (headless)
  -url            URL to download
  -id             ID of the file
  -ver            file version
