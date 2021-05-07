@@ -52,29 +52,44 @@ public class Download : MonoBehaviour
         {
             if (!Directory.Exists(path))
             {
-                Directory.CreateDirectory(path);
+                try
+                {
+                    Directory.CreateDirectory(path);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("Error creating cache directory! " + e.Message);
+                    Application.Quit(2);
+                    yield break;
+                }
             }
             Hash128 hash = new Hash128(0, 0, 0, version);
             Cache newCache = Caching.AddCache(path);
-            if (newCache.valid)
+            if (!newCache.valid)
             {
-                Caching.compressionEnabled = compressed;
-                Caching.currentCacheForWriting = newCache;
+                Debug.LogError("Error creating cache!");
+                Application.Quit(3);
+                yield break;
             }
+            Caching.compressionEnabled = compressed;
+            Caching.currentCacheForWriting = newCache;
             string folder = Statics.GetHashFromString(id);
             CachedAssetBundle cachedAssetBundle = new CachedAssetBundle(folder, hash);
             UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(url, cachedAssetBundle);
             yield return request.SendWebRequest();
             if (request.isNetworkError || request.isHttpError)
             {
-                Debug.Log(request.error);
-                Console.WriteLine("Error! " + request.error);
+                Debug.LogError(request.error);
             }
             stopwatch.Stop();
             Debug.Log("Elapsed ticks: " + stopwatch.ElapsedTicks);
-            Application.Quit(1);
+            Application.Quit();
         }
-        Application.Quit();
+        else 
+        {
+            Debug.LogError("Insufficient parameters.");
+            Application.Quit(1); 
+        }
     }
     private void Start()
     {
